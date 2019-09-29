@@ -20,6 +20,8 @@
 		8FBED7C02338AEF800DF7164 /* TechitterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8FBED7BF2338AEF800DF7164 /* TechitterTests.swift */; };
 		8FBED7CB2338AEF800DF7164 /* TechitterUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8FBED7CA2338AEF800DF7164 /* TechitterUITests.swift */; };
 		8FFFECE4233B378D00B8D9BF /* PostWatchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8FFFECE3233B378D00B8D9BF /* PostWatchViewController.swift */; };
+		8FFFED27233F6E3700B8D9BF /* CustumnTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8FFFED25233F6E3600B8D9BF /* CustumnTableViewCell.swift */; };
+		8FFFED28233F6E3700B8D9BF /* CustumnTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8FFFED26233F6E3600B8D9BF /* CustumnTableViewCell.xib */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -62,6 +64,8 @@
 		8FBED7CA2338AEF800DF7164 /* TechitterUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TechitterUITests.swift; sourceTree = "<group>"; };
 		8FBED7CC2338AEF800DF7164 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		8FFFECE3233B378D00B8D9BF /* PostWatchViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostWatchViewController.swift; sourceTree = "<group>"; };
+		8FFFED25233F6E3600B8D9BF /* CustumnTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustumnTableViewCell.swift; sourceTree = "<group>"; };
+		8FFFED26233F6E3600B8D9BF /* CustumnTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = CustumnTableViewCell.xib; sourceTree = "<group>"; };
 		97B0CFF6C283FA153FEC128B /* Pods-Techitter.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Techitter.debug.xcconfig"; path = "Target Support Files/Pods-Techitter/Pods-Techitter.debug.xcconfig"; sourceTree = "<group>"; };
 		B4054F41EC8C9FCBF1FB2198 /* Pods-Techitter.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Techitter.release.xcconfig"; path = "Target Support Files/Pods-Techitter/Pods-Techitter.release.xcconfig"; sourceTree = "<group>"; };
 		D74A7CF586729B216CD587D4 /* Pods-TechitterUITests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TechitterUITests.debug.xcconfig"; path = "Target Support Files/Pods-TechitterUITests/Pods-TechitterUITests.debug.xcconfig"; sourceTree = "<group>"; };
@@ -142,6 +146,8 @@
 				8FBED7B62338AEF800DF7164 /* Info.plist */,
 				8F29BAD12338B00B001A7EF9 /* GoogleService-Info.plist */,
 				8FFFECE3233B378D00B8D9BF /* PostWatchViewController.swift */,
+				8FFFED25233F6E3600B8D9BF /* CustumnTableViewCell.swift */,
+				8FFFED26233F6E3600B8D9BF /* CustumnTableViewCell.xib */,
 			);
 			path = Techitter;
 			sourceTree = "<group>";
@@ -282,6 +288,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8FFFED28233F6E3700B8D9BF /* CustumnTableViewCell.xib in Resources */,
 				8FBED7B52338AEF800DF7164 /* LaunchScreen.storyboard in Resources */,
 				8FBED7B22338AEF800DF7164 /* Assets.xcassets in Resources */,
 				8F29BAD22338B00B001A7EF9 /* GoogleService-Info.plist in Resources */,
@@ -399,6 +406,7 @@
 				8FBED7AD2338AEF800DF7164 /* ViewController.swift in Sources */,
 				8FBED7A92338AEF800DF7164 /* AppDelegate.swift in Sources */,
 				8FFFECE4233B378D00B8D9BF /* PostWatchViewController.swift in Sources */,
+				8FFFED27233F6E3700B8D9BF /* CustumnTableViewCell.swift in Sources */,
 				8FBED7AB2338AEF800DF7164 /* SceneDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

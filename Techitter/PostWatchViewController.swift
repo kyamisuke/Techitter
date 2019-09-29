@@ -6,12 +6,14 @@
 //  Copyright © 2019 kyamisuke. All rights reserved.
 //
 
+// MARK: - Coding
+
 import UIKit
 import Firebase
 import FirebaseAuth
 
-class PostWatchViewController: UIViewController, UITableViewDataSource, UITextFieldDelegate {
-    
+class PostWatchViewController: UIViewController, UITableViewDataSource, UITextFieldDelegate, UITableViewDelegate {
+    // 変数宣言
     var IDName: String!
     @IBOutlet weak var IDNameLabel: UILabel!
     @IBOutlet weak var PostTextField: UITextField!
@@ -20,23 +22,80 @@ class PostWatchViewController: UIViewController, UITableViewDataSource, UITextFi
     
     var ref: DatabaseReference!
     var PostText: String!
+    var nameArray = [String]()
+    var postArray = [String]()
+    
+
+    // セル数
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        print("[tableView] children num... \(self.nameArray)")
+        return nameArray.count
+    }
+        
+    // セルの内容
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        // nilの処理をする必要あり
+        if let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as? CustumnTableViewCell {
+            print(indexPath.row)
+            if !self.nameArray.isEmpty && !self.postArray.isEmpty {
+                let name = self.nameArray[indexPath.row]
+                let post = self.postArray[indexPath.row]
+                cell.updateCellInformation(userName: name, post: post)
+            }
+            
+            return cell
+        }
+            
+        return UITableViewCell()
+    }
+
+    /* debug変数 */ var count = 0
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        print("start viewDidLoad")
 
         // Do any additional setup after loading the view.
         
+        // variable update
         IDNameLabel.text = IDName
-        table.dataSource = self
-        PostTextField.delegate = self
         ref = Database.database().reference()
         
+        // table set
+        table.dataSource = self
+        table.delegate = self
+        PostTextField.delegate = self
+        table.register(UINib(nibName: "CustumnTableViewCell", bundle: nil), forHeaderFooterViewReuseIdentifier: "cell")
+        table.estimatedRowHeight = 70
+        table.rowHeight = UITableView.automaticDimension
+        
+        self.count = 0
+        // rootの監視
+        ref.child("userData").observe(.childAdded, with: { snapshot in
+            print("\(self.count): start observe: viewDidload\n")
+            let name = String(describing: snapshot.childSnapshot(forPath: "username").value!)
+            let post = String(describing: snapshot.childSnapshot(forPath: "Post").value!)
+            self.nameArray.append(name)
+            self.postArray.append(post)
+            print("\(self.nameArray) + \(self.postArray)")
+            self.count += 1
+        })
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        print("start viewWillAppear")
+        super.viewWillAppear(animated)
+
+        //Cellの高さを調節
+        table.estimatedRowHeight = 56
+        table.rowHeight = UITableView.automaticDimension
+        
+        print("start reload: viewWillAppear")
+        table.reloadData()
+    }
     // Firebaseへ書き込み
     @IBAction func send(_ sender: Any) {
-        PostText
-            = PostTextField.text
+        PostText = PostTextField.text
         if PostText == "" {
             // アラート処理
             let alert = UIAlertController(title: "空欄のままです", message: "テキストを入力してください", preferredStyle: .alert)
@@ -53,21 +112,28 @@ class PostWatchViewController: UIViewController, UITableViewDataSource, UITextFi
             self.ref.child("userData").childByAutoId().setValue(["username": IDName, "Post" : PostText])
             PostTextField.text = ""
         }
+        
+        // rootの監視
+//        self.count = 0
+//        ref.child("userData").observe(.childAdded, with: {snapshot in
+//            print("\(self.count): start observe: sendFunction\n")
+//            let name = String(describing: snapshot.childSnapshot(forPath: "username").value!)
+//            let post = String(describing: snapshot.childSnapshot(forPath: "Post").value!)
+//            self.nameArray.append(name)
+//            self.postArray.append(post)
+//            print("\(self.nameArray) + \(self.postArray)")
+//            self.count += 1
+//
+//            // ここでtableviewなどの更新を行う
+//            self.contentNum = Int(snapshot.childrenCount)
+//        })
+        
     }
     
     @IBAction func back(_ sender: Any) {
         self.presentingViewController?.dismiss(animated: true, completion: nil)
     }
     
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 0
-    }
-    
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "cell")
-        cell?.textLabel?.text = "test"
-        return cell!
-    }
     
     /*
     // MARK: - Navigation

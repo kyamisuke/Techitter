@@ -7,14 +7,18 @@
 //
 
 import UIKit
+import Firebase
 
 class ViewController: UIViewController {
     
     @IBOutlet weak var IDTextField: UITextField!
+    var ref: DatabaseReference!
+    var contentNum: Int = 0
     
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
+        
     }
 
     // 値渡し
@@ -26,6 +30,7 @@ class ViewController: UIViewController {
             if IDName != "" {
                 postWatchViewController.IDName = IDTextField.text
             } else {
+                // 匿名処理
                 postWatchViewController.IDName =  "匿メンター"
             }
         }

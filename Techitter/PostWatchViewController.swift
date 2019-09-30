@@ -19,11 +19,14 @@ class PostWatchViewController: UIViewController, UITableViewDataSource, UITextFi
     @IBOutlet weak var PostTextField: UITextField!
     
     @IBOutlet var table: UITableView!
+    @IBOutlet weak var hideView: UIView!
     
     var ref: DatabaseReference!
     var PostText: String!
     var nameArray = [String]()
     var postArray = [String]()
+    var reverseNameArray = [String]()
+    var reversePostArray = [String]()
     
 
     /* debug変数 */ var count = 0
@@ -42,7 +45,7 @@ class PostWatchViewController: UIViewController, UITableViewDataSource, UITextFi
         table.dataSource = self
         table.delegate = self
         PostTextField.delegate = self
-        table.register(UINib(nibName: "CustumnTableViewCell", bundle: nil), forHeaderFooterViewReuseIdentifier: "cell")
+        table.register(UINib(nibName: "CustumnTableViewCell", bundle: nil), forCellReuseIdentifier: "cell")
         
         /*デバッグ変数初期化*/ self.count = 0
         // rootの監視 childAddedは木構造に子が追加された時に発動するoption
@@ -52,6 +55,10 @@ class PostWatchViewController: UIViewController, UITableViewDataSource, UITextFi
             let post = String(describing: snapshot.childSnapshot(forPath: "Post").value!)
             self.nameArray.append(name)
             self.postArray.append(post)
+            
+            // 配列を逆順に
+            self.reverseNameArray = self.nameArray.reversed()
+            self.reversePostArray = self.postArray.reversed()
             print("\(self.nameArray) + \(self.postArray)")
             self.count += 1
             self.table.reloadData()
@@ -67,8 +74,6 @@ class PostWatchViewController: UIViewController, UITableViewDataSource, UITextFi
         // Cellの高さを調節
         table.estimatedRowHeight = 56
         table.rowHeight = UITableView.automaticDimension
-        
-        print("start reload: viewWillAppear")
     }
     
     override func viewDidDisappear(_ animated: Bool) {
@@ -114,8 +119,8 @@ class PostWatchViewController: UIViewController, UITableViewDataSource, UITextFi
         if let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as? CustumnTableViewCell {
             print("index: \(indexPath.row)")
             if !self.nameArray.isEmpty && !self.postArray.isEmpty {
-                let name = self.nameArray[indexPath.row]
-                let post = self.postArray[indexPath.row]
+                let name = self.reverseNameArray[indexPath.row]
+                let post = self.reversePostArray[indexPath.row]
     //          cell.updateCellInformation(userName: name, post: post)
                 cell.userNameLabel.text = name
                 cell.postLabel.text = post
@@ -127,7 +132,24 @@ class PostWatchViewController: UIViewController, UITableViewDataSource, UITextFi
         return UITableViewCell()
     }
 
-
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        textField.resignFirstResponder()
+        return true
+    }
+    
+    func textFieldDidBeginEditing(_ textField: UITextField) {
+        UIView.animate(withDuration: 0.2) {
+            textField.center.y -= 450
+            self.hideView.alpha = 0.7
+        }
+    }
+    
+    func textFieldDidEndEditing(_ textField: UITextField) {
+        UIView.animate(withDuration: 0.2) {
+            textField.center.y += 450
+            self.hideView.alpha = 0.0
+        }
+    }
     
     /*
     // MARK: - Navigation

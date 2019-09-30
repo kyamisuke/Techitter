@@ -26,29 +26,6 @@ class PostWatchViewController: UIViewController, UITableViewDataSource, UITextFi
     var postArray = [String]()
     
 
-    // セル数
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        print("[tableView] children num... \(self.nameArray)")
-        return nameArray.count
-    }
-        
-    // セルの内容
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        // nilの処理をする必要あり
-        if let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as? CustumnTableViewCell {
-            print(indexPath.row)
-            if !self.nameArray.isEmpty && !self.postArray.isEmpty {
-                let name = self.nameArray[indexPath.row]
-                let post = self.postArray[indexPath.row]
-                cell.updateCellInformation(userName: name, post: post)
-            }
-            
-            return cell
-        }
-            
-        return UITableViewCell()
-    }
-
     /* debug変数 */ var count = 0
     
     override func viewDidLoad() {
@@ -66,11 +43,9 @@ class PostWatchViewController: UIViewController, UITableViewDataSource, UITextFi
         table.delegate = self
         PostTextField.delegate = self
         table.register(UINib(nibName: "CustumnTableViewCell", bundle: nil), forHeaderFooterViewReuseIdentifier: "cell")
-        table.estimatedRowHeight = 70
-        table.rowHeight = UITableView.automaticDimension
         
-        self.count = 0
-        // rootの監視
+        /*デバッグ変数初期化*/ self.count = 0
+        // rootの監視 childAddedは木構造に子が追加された時に発動するoption
         ref.child("userData").observe(.childAdded, with: { snapshot in
             print("\(self.count): start observe: viewDidload\n")
             let name = String(describing: snapshot.childSnapshot(forPath: "username").value!)
@@ -79,20 +54,29 @@ class PostWatchViewController: UIViewController, UITableViewDataSource, UITextFi
             self.postArray.append(post)
             print("\(self.nameArray) + \(self.postArray)")
             self.count += 1
-        })
+            self.table.reloadData()
+
+         })
+        
     }
     
     override func viewWillAppear(_ animated: Bool) {
         print("start viewWillAppear")
         super.viewWillAppear(animated)
 
-        //Cellの高さを調節
+        // Cellの高さを調節
         table.estimatedRowHeight = 56
         table.rowHeight = UITableView.automaticDimension
         
         print("start reload: viewWillAppear")
-        table.reloadData()
     }
+    
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        // 画面が消えたときに、Firebaseのデータ読み取りのObserverを削除しておく
+        ref.removeAllObservers()
+    }
+    
     // Firebaseへ書き込み
     @IBAction func send(_ sender: Any) {
         PostText = PostTextField.text
@@ -112,28 +96,38 @@ class PostWatchViewController: UIViewController, UITableViewDataSource, UITextFi
             self.ref.child("userData").childByAutoId().setValue(["username": IDName, "Post" : PostText])
             PostTextField.text = ""
         }
-        
-        // rootの監視
-//        self.count = 0
-//        ref.child("userData").observe(.childAdded, with: {snapshot in
-//            print("\(self.count): start observe: sendFunction\n")
-//            let name = String(describing: snapshot.childSnapshot(forPath: "username").value!)
-//            let post = String(describing: snapshot.childSnapshot(forPath: "Post").value!)
-//            self.nameArray.append(name)
-//            self.postArray.append(post)
-//            print("\(self.nameArray) + \(self.postArray)")
-//            self.count += 1
-//
-//            // ここでtableviewなどの更新を行う
-//            self.contentNum = Int(snapshot.childrenCount)
-//        })
-        
     }
     
     @IBAction func back(_ sender: Any) {
         self.presentingViewController?.dismiss(animated: true, completion: nil)
     }
     
+    // セル数
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        print("[tableView] children num... \(self.nameArray.count)")
+        return nameArray.count
+    }
+        
+    // セルの内容
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        // nilの処理をする必要あり
+        if let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as? CustumnTableViewCell {
+            print("index: \(indexPath.row)")
+            if !self.nameArray.isEmpty && !self.postArray.isEmpty {
+                let name = self.nameArray[indexPath.row]
+                let post = self.postArray[indexPath.row]
+    //          cell.updateCellInformation(userName: name, post: post)
+                cell.userNameLabel.text = name
+                cell.postLabel.text = post
+            }
+            
+            return cell
+        }
+            
+        return UITableViewCell()
+    }
+
+
     
     /*
     // MARK: - Navigation
